@@ -65,7 +65,7 @@ void (*key_func[])(const STRING) = {
     exec_print,
     exec_for,
     exec_next,
-    exec_while,
+    //exec_while,
     exec_wend,
     exec_if,
     exec_else,
