@@ -3,7 +3,8 @@
 
 typedef VARIANT OPERAND;
 
-typedef enum {
+typedef enum
+{
     /* 算数运算 */
     oper_lparen = 0,    // 左括号
     oper_rparen,        // 右括号
@@ -32,12 +33,14 @@ typedef enum {
     oper_min            // 栈底
 } operator_type;
 
-typedef enum {
+typedef enum
+{
     left2right,
     right2left
 } associativity;
 
-typedef struct {
+typedef struct
+{
     int numbers;        // 操作数
     int icp;            // 优先级
     int isp;            // 优先级
@@ -45,20 +48,24 @@ typedef struct {
     operator_type oper; // 操作符
 } OPERATOR;
 
-typedef enum {
+typedef enum
+{
     token_operand = 1,
     token_operator
 } token_type;
 
-typedef struct {
+typedef struct
+{
     token_type type;
-    union {
+    union
+    {
         OPERAND var;
         OPERATOR ator;
     };
 } TOKEN;
 
-typedef struct tlist {
+typedef struct tlist
+{
     TOKEN token;
     struct tlist* next;
 } TOKEN_LIST, * PTLIST;

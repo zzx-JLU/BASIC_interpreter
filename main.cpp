@@ -4,7 +4,8 @@
 #include "grammar.cpp"
 #define _CRT_SECURE_NO_WARNINGS
 
-typedef enum {
+typedef enum
+{
     key_input = 0,  // INPUT
     key_print,      // PRINT
     key_for,        // FOR .. TO .. STEP
@@ -20,40 +21,52 @@ typedef enum {
 
 keywords yacc(const STRING line)
 {
-    if (!strnicmp(line, "INPUT ", 6)) {
+    if (!strnicmp(line, "INPUT ", 6))
+    {
         return key_input;
     }
-    else if (!strnicmp(line, "PRINT ", 6)) {
+    else if (!strnicmp(line, "PRINT ", 6))
+    {
         return key_print;
     }
-    else if (!strnicmp(line, "FOR ", 4)) {
+    else if (!strnicmp(line, "FOR ", 4))
+    {
         return key_for;
     }
-    else if (!stricmp(line, "NEXT")) {
+    else if (!stricmp(line, "NEXT"))
+    {
         return key_next;
     }
-    else if (!strnicmp(line, "WHILE ", 6)) {
+    else if (!strnicmp(line, "WHILE ", 6))
+    {
         return key_while;
     }
-    else if (!stricmp(line, "WEND")) {
+    else if (!stricmp(line, "WEND"))
+    {
         return key_wend;
     }
-    else if (!strnicmp(line, "IF ", 3)) {
+    else if (!strnicmp(line, "IF ", 3))
+    {
         return key_if;
     }
-    else if (!stricmp(line, "ELSE")) {
+    else if (!stricmp(line, "ELSE"))
+    {
         return key_else;
     }
-    else if (!stricmp(line, "END IF")) {
+    else if (!stricmp(line, "END IF"))
+    {
         return key_endif;
     }
-    else if (!strnicmp(line, "GOTO ", 5)) {
+    else if (!strnicmp(line, "GOTO ", 5))
+    {
         return key_goto;
     }
-    else if (!strnicmp(line, "LET ", 4)) {
+    else if (!strnicmp(line, "LET ", 4))
+    {
         return key_let;
     }
-    else if (strchr(line, '=')) {
+    else if (strchr(line, '='))
+    {
         return key_let;
     }
 
@@ -65,7 +78,7 @@ void (*key_func[])(const STRING) = {
     exec_print,
     exec_for,
     exec_next,
-    //exec_while,
+    exec_while,
     exec_wend,
     exec_if,
     exec_else,
@@ -76,14 +89,16 @@ void (*key_func[])(const STRING) = {
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2) {
+    if (argc != 2)
+    {
         fprintf(stderr, "usage: %s basic_script_file/n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
     load_program(argv[1]);
 
-    while (cp < code_size) {
+    while (cp < code_size)
+    {
         (*key_func[yacc(code[cp].line)]) (code[cp].line);
         cp++;
     }

@@ -1,7 +1,8 @@
 #pragma once
 #include "basic_io.h"
 
-static struct {
+static struct
+{
     int id;           // memory index
     int ln;           // line number
     double target;    // target value

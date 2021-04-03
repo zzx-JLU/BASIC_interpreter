@@ -7,7 +7,8 @@ extern CODE code[PROGRAM_SIZE];
 extern int cp;
 extern int code_size;
 
-typedef enum {
+typedef enum
+{
     var_null = 0,
     var_double,
     var_string
@@ -15,15 +16,18 @@ typedef enum {
 
 typedef char STRING[128];
 
-typedef struct {
+typedef struct
+{
     variant_type type;
-    union {
+    union
+    {
         double i;
         STRING s;
     };
 } VARIANT;
 
-typedef struct {
+typedef struct
+{
     int ln;     // line number
     STRING line;
 } CODE;
