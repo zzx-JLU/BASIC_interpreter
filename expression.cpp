@@ -200,6 +200,11 @@ VARIANT eval(const char expr[])
 			{
 				op1->token.var.i -= op2->token.var.i;
 			}
+			else
+			{
+				fprintf(stderr, "类型错误\n");
+				exit(EXIT_FAILURE);
+			}
 			free(op2);
 			break;
 		// 乘法运算
@@ -212,6 +217,11 @@ VARIANT eval(const char expr[])
 				op2->token.var.type == var_double)
 			{
 				op1->token.var.i *= op2->token.var.i;
+			}
+			else
+			{
+				fprintf(stderr, "类型错误\n");
+				exit(EXIT_FAILURE);
 			}
 			free(op2);
 			break;
@@ -227,10 +237,40 @@ VARIANT eval(const char expr[])
 			{
 				op1->token.var.i *= op2->token.var.i;
 			}
+			else if (op2->token.var.i == 0)
+			{
+				fprintf(stderr, "除数为0\n");
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				fprintf(stderr, "类型错误\n");
+				exit(EXIT_FAILURE);
+			}
 			free(op2);
 			break;
-			// ...
-			// 其他操作符方法类似
+		case oper_mod:
+			// 取出 stack 中最末两个操作数
+			op2 = stack;
+			op1 = stack = stack->next;
+
+
+			break;
+		case oper_power:
+		case oper_positive:
+		case oper_negative:
+		case oper_factorial:
+		case oper_lt:
+		case oper_gt:
+		case oper_eq:
+		case oper_ne:
+		case oper_le:
+		case oper_ge:
+		case oper_and:
+		case oper_or:
+		case oper_not:
+		case oper_assignment:
+		case oper_min:
 		default:
 			// 无效操作符处理
 			break;
