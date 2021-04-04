@@ -1,6 +1,7 @@
 #include "expression.h"
 #include <iostream>
 #include <malloc.h>
+#include <math.h>
 #define _CRT_SECURE_NO_WARNINGS
 
 TOKEN before;
@@ -249,14 +250,53 @@ VARIANT eval(const char expr[])
 			}
 			free(op2);
 			break;
+		// 取余运算
 		case oper_mod:
 			// 取出 stack 中最末两个操作数
 			op2 = stack;
 			op1 = stack = stack->next;
 
-
+			if (op1->token.var.type != var_double ||
+				op2->token.var.type != var_double)
+			{
+				fprintf(stderr, "类型错误\n");
+				exit(EXIT_FAILURE);
+			}
+			else if (op2->token.var.i == 0)
+			{
+				fprintf(stderr, "除数为0\n");
+				exit(EXIT_FAILURE);
+			}
+			else if (op1->token.var.i - (int)op1->token.var.i != 0 ||
+				op2->token.var.i - (int)op2->token.var.i != 0)
+			{
+				fprintf(stderr, "类型错误\n");
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				op1->token.var.i = (int)op1->token.var.i % (int)op2->token.var.i;
+			}
+			free(op2);
 			break;
+		// 幂运算
 		case oper_power:
+			// 取出 stack 中最末两个操作数
+			op2 = stack;
+			op1 = stack = stack->next;
+
+			if (op1->token.var.type == var_double &&
+				op2->token.var.type == var_double)
+			{
+				op1->token.var.i = pow(op1->token.var.i, op2->token.var.i);
+			}
+			else
+			{
+				fprintf(stderr, "类型错误\n");
+				exit(EXIT_FAILURE);
+			}
+			free(op2);
+			break;
 		case oper_positive:
 		case oper_negative:
 		case oper_factorial:
@@ -269,8 +309,6 @@ VARIANT eval(const char expr[])
 		case oper_and:
 		case oper_or:
 		case oper_not:
-		case oper_assignment:
-		case oper_min:
 		default:
 			// 无效操作符处理
 			break;
@@ -346,7 +384,7 @@ static TOKEN next_token()
 			if (token.var.type == var_null)
 			{
 				memset(&token, 0, sizeof(token));
-				fprintf(stderr, "变量%c未赋值！/n", s[0]);
+				fprintf(stderr, "变量%c未赋值！\n", s[0]);
 				exit(EXIT_FAILURE);
 			}
 		}

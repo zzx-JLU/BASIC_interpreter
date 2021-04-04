@@ -11,7 +11,7 @@ void load_program(STRING filename)
 
     if (fp == NULL)
     {
-        fprintf(stderr, "文件 %s 无法打开！/n", filename);
+        fprintf(stderr, "文件 %s 无法打开！\n", filename);
         exit(EXIT_FAILURE);
     }
 
@@ -19,7 +19,7 @@ void load_program(STRING filename)
     {
         if (code[cp].ln <= code[cp - 1].ln)
         {
-            fprintf(stderr, "Line %d: 标号错误！/n", cp);
+            fprintf(stderr, "Line %d: 标号错误！\n", cp);
             exit(EXIT_FAILURE);
         }
 
@@ -43,7 +43,7 @@ void load_program(STRING filename)
         cp++;
         if (cp >= PROGRAM_SIZE)
         {
-            fprintf(stderr, "程序%s太大，代码空间不足！/n", filename);
+            fprintf(stderr, "程序%s太大，代码空间不足！\n", filename);
             exit(EXIT_FAILURE);
         }
     }
@@ -68,7 +68,7 @@ void exec_input(const STRING line)
         }
         if (!isalpha(*s) || isalnum(*(s + 1)))
         {
-            perror("变量名错误！/n");
+            perror("变量名错误！\n");
             exit(EXIT_FAILURE);
         }
         else
@@ -102,7 +102,7 @@ void exec_input(const STRING line)
         } while (*s && isspace(*s));
         if (*s && *s != ',')
         {
-            perror("INPUT 表达式语法错误！/n");
+            perror("INPUT 表达式语法错误！\n");
             exit(EXIT_FAILURE);
         }
         else if (*s)
@@ -185,7 +185,7 @@ void exec_assignment(const STRING line)
     }
     if (!isalpha(*s) || isalnum(*(s + 1)))
     {
-        perror("变量名错误！/n");
+        perror("变量名错误！\n");
         exit(EXIT_FAILURE);
     }
     else
@@ -199,7 +199,7 @@ void exec_assignment(const STRING line)
     } while (*s && isspace(*s));
     if (*s != '=')
     {
-        fprintf(stderr, "赋值表达式 %s 语法错误！/n", line);
+        fprintf(stderr, "赋值表达式 %s 语法错误！\n", line);
         exit(EXIT_FAILURE);
     }
     else
