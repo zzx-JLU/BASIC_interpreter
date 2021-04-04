@@ -2,7 +2,7 @@
 #define MEMORY_SIZE (26)
 #define PROGRAM_SIZE (10000)
 
-extern VARIANT memory[MEMORY_SIZE];
+extern VARIANT memory[MEMORY_SIZE]; // 只支持a~z这26个变量，不区分大小写
 extern CODE code[PROGRAM_SIZE];
 extern int cp;
 extern int code_size;

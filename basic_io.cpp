@@ -24,9 +24,9 @@ void load_program(STRING filename)
         }
 
         fgets(code[cp].line, sizeof(code[cp].line), fp);
-        for (bg = 0; isspace(code[cp].line[bg]); bg++);
+        for (bg = 0; isspace(code[cp].line[bg]); bg++); // 过滤前面的空白符
         ed = (int)strlen(code[cp].line + bg) - 1;
-        while (ed >= 0 && isspace(code[cp].line[ed + bg]))
+        while (ed >= 0 && isspace(code[cp].line[ed + bg])) // 过滤后面的空白符
         {
             ed--;
         }
@@ -147,7 +147,7 @@ void exec_print(const STRING line)
             e = NULL;
         }
 
-        if (c++) putchar('/t');
+        if (c++) putchar('\t');
         v = eval(s);
         if (v.type == var_double)
         {
@@ -164,7 +164,7 @@ void exec_print(const STRING line)
         }
         else
         {
-            putchar('/n');
+            putchar('\n');
             break;
         }
     }

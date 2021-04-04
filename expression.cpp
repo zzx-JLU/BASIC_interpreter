@@ -5,6 +5,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 TOKEN before;
+const char* e = NULL;
 
 static const OPERATOR operators[] = {
 	/* 算数运算 */
@@ -37,10 +38,11 @@ static const OPERATOR operators[] = {
 	{2, 0, 0, right2left, oper_min}          // 栈底
 };
 
-PTLIST infix2postfix()
+PTLIST infix2postfix(const char expr[])
 {
 	PTLIST list = NULL, tail, p;
 	PTLIST stack = NULL;
+	e = expr;
 	// 初始时在临时空间放一个优先级最低的操作符
 	// 这样就不用判断是否为空了，方便编码
 	stack = (PTLIST)calloc(1, sizeof(TOKEN_LIST));
@@ -135,7 +137,7 @@ VARIANT eval(const char expr[])
 	stack->token.type = token_operator;
 	stack->token.ator = operators[oper_min];
 	// 将中缀表达式转换成后缀表达式
-	PTLIST list = infix2postfix();
+	PTLIST list = infix2postfix(expr);
 	while (list)
 	{
 		// 取出一个 token
