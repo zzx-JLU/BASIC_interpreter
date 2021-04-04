@@ -299,17 +299,29 @@ VARIANT eval(const char expr[])
 			}
 			free(op2);
 			break;
+		// 正号
 		case oper_positive:
+		// 负号
 		case oper_negative:
+		// 阶乘运算
 		case oper_factorial:
+		// 小于
 		case oper_lt:
+		// 大于
 		case oper_gt:
+		// 等于
 		case oper_eq:
+		// 不等于
 		case oper_ne:
+		// 小于等于
 		case oper_le:
+		// 大于等于
 		case oper_ge:
+		// 逻辑与
 		case oper_and:
+		// 逻辑或
 		case oper_or:
+		// 逻辑非
 		case oper_not:
 		default:
 			// 无效操作符处理
