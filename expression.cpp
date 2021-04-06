@@ -59,7 +59,7 @@ PTLIST infix2postfix(const char expr[])
 		p->token = next_token();
 		if (p->token.type == token_operand)
 		{
-			// 如果是操作数，就不用客气，直接输出
+			// 如果是操作数，就直接放到列表中
 			if (!list)
 			{
 				list = tail = p;
@@ -127,8 +127,6 @@ PTLIST infix2postfix(const char expr[])
 
 VARIANT eval(const char expr[])
 {
-	// ...
-	// 一些变量的定义和声明
 	PTLIST p;
 	PTLIST op1, op2;
 	char* s1, * s2;
@@ -194,7 +192,6 @@ VARIANT eval(const char expr[])
 			break;
 		// 减法运算
 		case oper_minus:
-			// 取出 stack 中最末两个操作数
 			op2 = stack;
 			op1 = stack = stack->next;
 
@@ -212,7 +209,6 @@ VARIANT eval(const char expr[])
 			break;
 		// 乘法运算
 		case oper_multiply:
-			// 取出 stack 中最末两个操作数
 			op2 = stack;
 			op1 = stack = stack->next;
 
@@ -230,7 +226,6 @@ VARIANT eval(const char expr[])
 			break;
 		// 除法运算
 		case oper_divide:
-			// 取出 stack 中最末两个操作数
 			op2 = stack;
 			op1 = stack = stack->next;
 
@@ -254,7 +249,6 @@ VARIANT eval(const char expr[])
 			break;
 		// 取余运算
 		case oper_mod:
-			// 取出 stack 中最末两个操作数
 			op2 = stack;
 			op1 = stack = stack->next;
 
@@ -283,7 +277,6 @@ VARIANT eval(const char expr[])
 			break;
 		// 幂运算
 		case oper_power:
-			// 取出 stack 中最末两个操作数
 			op2 = stack;
 			op1 = stack = stack->next;
 
@@ -870,6 +863,7 @@ static TOKEN next_token()
 			if (*(e + 1) == '=')
 			{
 				token.ator = operators[oper_ne];
+				e++;
 			}
 			else
 			{
@@ -880,6 +874,7 @@ static TOKEN next_token()
 			if (*(e + 1) == '=')
 			{
 				token.ator = operators[oper_le];
+				e++;
 			}
 			else
 			{
@@ -890,6 +885,7 @@ static TOKEN next_token()
 			if (*(e + 1) == '=')
 			{
 				token.ator = operators[oper_ge];
+				e++;
 			}
 			else
 			{
