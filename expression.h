@@ -50,7 +50,8 @@ typedef struct
 
 typedef enum
 {
-    token_operand = 1,
+    token_unknown = 0,
+    token_operand,
     token_operator
 } token_type;
 

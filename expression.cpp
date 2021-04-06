@@ -205,7 +205,7 @@ VARIANT eval(const char expr[])
 			}
 			else
 			{
-				fprintf(stderr, "类型错误\n");
+				fprintf(stderr, "类型错误!\n");
 				exit(EXIT_FAILURE);
 			}
 			free(op2);
@@ -223,7 +223,7 @@ VARIANT eval(const char expr[])
 			}
 			else
 			{
-				fprintf(stderr, "类型错误\n");
+				fprintf(stderr, "类型错误!\n");
 				exit(EXIT_FAILURE);
 			}
 			free(op2);
@@ -242,12 +242,12 @@ VARIANT eval(const char expr[])
 			}
 			else if (op2->token.var.i == 0)
 			{
-				fprintf(stderr, "除数为0\n");
+				fprintf(stderr, "除数为0!\n");
 				exit(EXIT_FAILURE);
 			}
 			else
 			{
-				fprintf(stderr, "类型错误\n");
+				fprintf(stderr, "类型错误!\n");
 				exit(EXIT_FAILURE);
 			}
 			free(op2);
@@ -261,18 +261,18 @@ VARIANT eval(const char expr[])
 			if (op1->token.var.type != var_double ||
 				op2->token.var.type != var_double)
 			{
-				fprintf(stderr, "类型错误\n");
+				fprintf(stderr, "类型错误!\n");
 				exit(EXIT_FAILURE);
 			}
 			else if (op2->token.var.i == 0)
 			{
-				fprintf(stderr, "除数为0\n");
+				fprintf(stderr, "除数为0!\n");
 				exit(EXIT_FAILURE);
 			}
 			else if (op1->token.var.i - (int)op1->token.var.i != 0 ||
 				op2->token.var.i - (int)op2->token.var.i != 0)
 			{
-				fprintf(stderr, "类型错误\n");
+				fprintf(stderr, "类型错误!\n");
 				exit(EXIT_FAILURE);
 			}
 			else
@@ -294,37 +294,432 @@ VARIANT eval(const char expr[])
 			}
 			else
 			{
-				fprintf(stderr, "类型错误\n");
+				fprintf(stderr, "类型错误!\n");
 				exit(EXIT_FAILURE);
 			}
 			free(op2);
 			break;
 		// 正号
 		case oper_positive:
+			op2 = stack;
+			if (op2->token.var.type != var_double)
+			{
+				fprintf(stderr, "类型错误!\n");
+				exit(EXIT_FAILURE);
+			}
 		// 负号
 		case oper_negative:
+			op2 = stack;
+			if (op2->token.var.type == var_double)
+			{
+				op2->token.var.i = -op2->token.var.i;
+			}
+			else
+			{
+				fprintf(stderr, "类型错误!\n");
+				exit(EXIT_FAILURE);
+			}
 		// 阶乘运算
 		case oper_factorial:
+			op2 = stack;
+			if (op2->token.var.type == var_double)
+			{
+				if (op2->token.var.i - (int)op2->token.var.i != 0)
+				{
+					fprintf(stderr, "类型错误!\n");
+					exit(EXIT_FAILURE);
+				}
+				else
+				{
+					int res = 1;
+					for (int i = 2; i <= (int)op2->token.var.i; i++)
+					{
+						res *= i;
+					}
+					op2->token.var.i = res;
+				}
+			}
+			else
+			{
+				fprintf(stderr, "类型错误!\n");
+				exit(EXIT_FAILURE);
+			}
 		// 小于
 		case oper_lt:
+			op2 = stack;
+			op1 = stack = stack->next;
+
+			if (op1->token.var.type == var_double &&
+				op2->token.var.type == var_double)
+			{
+				op1->token.var.type = var_string;
+				if (op1->token.var.i < op2->token.var.i)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			else
+			{
+				if (op1->token.var.type == var_double)
+				{
+					sprintf(s1, "%g", op1->token.var.i);
+				}
+				else
+				{
+					strcpy(s1, op1->token.var.s);
+				}
+				if (op2->token.var.type == var_double)
+				{
+					sprintf(s2, "%g", op2->token.var.i);
+				}
+				else
+				{
+					strcpy(s2, op2->token.var.s);
+				}
+				if (strcmp(s1, s2) < 0)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			free(op2);
+			break;
 		// 大于
 		case oper_gt:
+			op2 = stack;
+			op1 = stack = stack->next;
+
+			if (op1->token.var.type == var_double &&
+				op2->token.var.type == var_double)
+			{
+				op1->token.var.type = var_string;
+				if (op1->token.var.i > op2->token.var.i)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			else
+			{
+				if (op1->token.var.type == var_double)
+				{
+					sprintf(s1, "%g", op1->token.var.i);
+				}
+				else
+				{
+					strcpy(s1, op1->token.var.s);
+				}
+				if (op2->token.var.type == var_double)
+				{
+					sprintf(s2, "%g", op2->token.var.i);
+				}
+				else
+				{
+					strcpy(s2, op2->token.var.s);
+				}
+				if (strcmp(s1, s2) > 0)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			free(op2);
+			break;
 		// 等于
 		case oper_eq:
+			op2 = stack;
+			op1 = stack = stack->next;
+
+			if (op1->token.var.type == var_double &&
+				op2->token.var.type == var_double)
+			{
+				op1->token.var.type = var_string;
+				if (op1->token.var.i == op2->token.var.i)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			else
+			{
+				if (op1->token.var.type == var_double)
+				{
+					sprintf(s1, "%g", op1->token.var.i);
+				}
+				else
+				{
+					strcpy(s1, op1->token.var.s);
+				}
+				if (op2->token.var.type == var_double)
+				{
+					sprintf(s2, "%g", op2->token.var.i);
+				}
+				else
+				{
+					strcpy(s2, op2->token.var.s);
+				}
+				if (strcmp(s1, s2) == 0)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			free(op2);
+			break;
 		// 不等于
 		case oper_ne:
+			op2 = stack;
+			op1 = stack = stack->next;
+
+			if (op1->token.var.type == var_double &&
+				op2->token.var.type == var_double)
+			{
+				op1->token.var.type = var_string;
+				if (op1->token.var.i != op2->token.var.i)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			else
+			{
+				if (op1->token.var.type == var_double)
+				{
+					sprintf(s1, "%g", op1->token.var.i);
+				}
+				else
+				{
+					strcpy(s1, op1->token.var.s);
+				}
+				if (op2->token.var.type == var_double)
+				{
+					sprintf(s2, "%g", op2->token.var.i);
+				}
+				else
+				{
+					strcpy(s2, op2->token.var.s);
+				}
+				if (strcmp(s1, s2) != 0)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			free(op2);
+			break;
 		// 小于等于
 		case oper_le:
+			op2 = stack;
+			op1 = stack = stack->next;
+
+			if (op1->token.var.type == var_double &&
+				op2->token.var.type == var_double)
+			{
+				op1->token.var.type = var_string;
+				if (op1->token.var.i <= op2->token.var.i)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			else
+			{
+				if (op1->token.var.type == var_double)
+				{
+					sprintf(s1, "%g", op1->token.var.i);
+				}
+				else
+				{
+					strcpy(s1, op1->token.var.s);
+				}
+				if (op2->token.var.type == var_double)
+				{
+					sprintf(s2, "%g", op2->token.var.i);
+				}
+				else
+				{
+					strcpy(s2, op2->token.var.s);
+				}
+				if (strcmp(s1, s2) <= 0)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			free(op2);
+			break;
 		// 大于等于
 		case oper_ge:
+			op2 = stack;
+			op1 = stack = stack->next;
+
+			if (op1->token.var.type == var_double &&
+				op2->token.var.type == var_double)
+			{
+				op1->token.var.type = var_string;
+				if (op1->token.var.i >= op2->token.var.i)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			else
+			{
+				if (op1->token.var.type == var_double)
+				{
+					sprintf(s1, "%g", op1->token.var.i);
+				}
+				else
+				{
+					strcpy(s1, op1->token.var.s);
+				}
+				if (op2->token.var.type == var_double)
+				{
+					sprintf(s2, "%g", op2->token.var.i);
+				}
+				else
+				{
+					strcpy(s2, op2->token.var.s);
+				}
+				if (strcmp(s1, s2) >= 0)
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+				else
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			free(op2);
+			break;
 		// 逻辑与
 		case oper_and:
+			op2 = stack;
+			op1 = stack = stack->next;
+			if (op1->token.var.type == var_double ||
+				op2->token.var.type == var_double)
+			{
+				fprintf(stderr, "类型错误!\n");
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				if (strcmp(op1->token.var.s, "true") ||
+					strcmp(op1->token.var.s, "false"))
+				{
+					fprintf(stderr, "类型错误!\n");
+					exit(EXIT_FAILURE);
+				}
+				if (strcmp(op2->token.var.s, "true") ||
+					strcmp(op2->token.var.s, "false"))
+				{
+					fprintf(stderr, "类型错误!\n");
+					exit(EXIT_FAILURE);
+				}
+				if (!strcmp(op1->token.var.s, "false") ||
+					!strcmp(op2->token.var.s, "false"))
+				{
+					strcpy(op1->token.var.s, "false");
+				}
+			}
+			free(op2);
+			break;
 		// 逻辑或
 		case oper_or:
+			op2 = stack;
+			op1 = stack = stack->next;
+			if (op1->token.var.type == var_double ||
+				op2->token.var.type == var_double)
+			{
+				fprintf(stderr, "类型错误!\n");
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				if (strcmp(op1->token.var.s, "true") ||
+					strcmp(op1->token.var.s, "false"))
+				{
+					fprintf(stderr, "类型错误!\n");
+					exit(EXIT_FAILURE);
+				}
+				if (strcmp(op2->token.var.s, "true") ||
+					strcmp(op2->token.var.s, "false"))
+				{
+					fprintf(stderr, "类型错误!\n");
+					exit(EXIT_FAILURE);
+				}
+				if (!strcmp(op1->token.var.s, "true") ||
+					!strcmp(op2->token.var.s, "true"))
+				{
+					strcpy(op1->token.var.s, "true");
+				}
+			}
+			free(op2);
+			break;
 		// 逻辑非
 		case oper_not:
+			op2 = stack;
+			if (op2->token.var.type == var_double)
+			{
+				fprintf(stderr, "类型错误!\n");
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				if (strcmp(op2->token.var.s, "true") ||
+					strcmp(op2->token.var.s, "false"))
+				{
+					fprintf(stderr, "类型错误!\n");
+					exit(EXIT_FAILURE);
+				}
+				if (!strcmp(op2->token.var.s, "true"))
+				{
+					strcpy(op2->token.var.s, "false");
+				}
+				else if (!strcmp(op2->token.var.s, "false"))
+				{
+					strcpy(op2->token.var.s, "true");
+				}
+			}
+			break;
 		default:
 			// 无效操作符处理
+			fprintf(stderr, "无效的操作符!\n");
+			exit(EXIT_FAILURE);
 			break;
 		}
 		free(p);
@@ -339,7 +734,7 @@ VARIANT eval(const char expr[])
 
 static TOKEN next_token()
 {
-	TOKEN token = { 0 };
+	TOKEN token = { token_unknown };
 	STRING s;
 	int i;
 	if (e == NULL)
@@ -404,7 +799,8 @@ static TOKEN next_token()
 		}
 		else
 		{
-			goto errorhandler;
+			fprintf(stderr, "%s:无法识别的字符序列!\n", s);
+			exit(EXIT_FAILURE);
 		}
 	}
 	else if (isdigit(*e) || *e == '.')
@@ -422,6 +818,8 @@ static TOKEN next_token()
 		{
 			// 读取数字失败！
 			// 错误处理
+			fprintf(stderr, "%s:读取数字失败!\n", s);
+			exit(EXIT_FAILURE);
 		}
 	}
 	else
@@ -433,10 +831,78 @@ static TOKEN next_token()
 		case '(':
 			token.ator = operators[oper_lparen];
 			break;
-			// ...
-			// 此处省略其他操作符的代码
+		case ')':
+			token.ator = operators[oper_rparen];
+			break;
+		case '+':
+			if (before.type == token_operand)
+			{
+				token.ator = operators[oper_plus];
+			}
+			else
+			{
+				token.ator = operators[oper_positive];
+			}
+			break;
+		case '-':
+			if (before.type == token_operand)
+			{
+				token.ator = operators[oper_minus];
+			}
+			else
+			{
+				token.ator = operators[oper_negative];
+			}
+			break;
+		case '*':
+			token.ator = operators[oper_multiply];
+			break;
+		case '/':
+			token.ator = operators[oper_divide];
+			break;
+		case '%':
+			token.ator = operators[oper_mod];
+			break;
+		case '^':
+			token.ator = operators[oper_power];
+			break;
+		case '!':
+			if (*(e + 1) == '=')
+			{
+				token.ator = operators[oper_ne];
+			}
+			else
+			{
+				token.ator = operators[oper_factorial];
+			}
+			break;
+		case '<':
+			if (*(e + 1) == '=')
+			{
+				token.ator = operators[oper_le];
+			}
+			else
+			{
+				token.ator = operators[oper_lt];
+			}
+			break;
+		case '>':
+			if (*(e + 1) == '=')
+			{
+				token.ator = operators[oper_ge];
+			}
+			else
+			{
+				token.ator = operators[oper_gt];
+			}
+			break;
+		case '=':
+			token.ator = operators[oper_eq];
+			break;
 		default:
 			// 不可识别的操作符
+			fprintf(stderr, "%c:不可识别的操作符!\n", *e);
+			exit(EXIT_FAILURE);
 			break;
 		}
 		e++;
