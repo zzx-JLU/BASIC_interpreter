@@ -1,7 +1,11 @@
 #include "expression.h"
-#include <iostream>
+#include <stdio.h>
 #include <malloc.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <corecrt_memory.h>
+#include <ctype.h>
 #define _CRT_SECURE_NO_WARNINGS
 
 TOKEN before;
@@ -40,7 +44,9 @@ static const OPERATOR operators[] = {
 
 PTLIST infix2postfix(const char expr[])
 {
-	PTLIST list = NULL, tail, p;
+	PTLIST list = NULL;
+	PTLIST tail = NULL;
+	PTLIST p = NULL;
 	PTLIST stack = NULL;
 	e = expr;
 	// 初始时在临时空间放一个优先级最低的操作符

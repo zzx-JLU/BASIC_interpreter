@@ -1,7 +1,10 @@
 #include "basic_io.h"
-#include <iostream>
+#include <stdio.h>
 #include <cassert>
-#include "expression.cpp"
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include "expression.h"
 #define _CRT_SECURE_NO_WARNINGS
 
 void load_program(STRING filename)

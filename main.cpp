@@ -1,7 +1,9 @@
-﻿#include <iostream>
+﻿#include <stdio.h>
 #include "basic_io.h"
-#include "basic_io.cpp"
-#include "grammar.cpp"
+#include <string.h>
+#include <stdlib.h>
+#include "basic_io.h"
+#include "grammar.h"
 #define _CRT_SECURE_NO_WARNINGS
 
 typedef enum

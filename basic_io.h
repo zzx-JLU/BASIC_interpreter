@@ -1,9 +1,8 @@
 #pragma once
 #define MEMORY_SIZE (26)
 #define PROGRAM_SIZE (10000)
+#define _CRT_SECURE_NO_WARNINGS
 
-extern VARIANT memory[MEMORY_SIZE]; // 只支持a~z这26个变量，不区分大小写
-extern CODE code[PROGRAM_SIZE];
 extern int cp;
 extern int code_size;
 
@@ -31,3 +30,14 @@ typedef struct
     int ln;     // line number
     STRING line;
 } CODE;
+
+extern VARIANT memory[MEMORY_SIZE]; // 只支持a~z这26个变量，不区分大小写
+extern CODE code[PROGRAM_SIZE];
+
+void load_program(STRING filename);
+
+void exec_input(const STRING line);
+
+void exec_print(const STRING line);
+
+void exec_assignment(const STRING line);

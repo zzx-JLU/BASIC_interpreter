@@ -1,5 +1,6 @@
 #pragma once
 #include "basic_io.h"
+#define _CRT_SECURE_NO_WARNINGS
 
 typedef VARIANT OPERAND;
 
@@ -70,3 +71,9 @@ typedef struct tlist
     TOKEN token;
     struct tlist* next;
 } TOKEN_LIST, * PTLIST;
+
+PTLIST infix2postfix(const char expr[]);
+
+VARIANT eval(const char expr[]);
+
+static TOKEN next_token();
