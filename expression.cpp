@@ -86,8 +86,15 @@ PTLIST infix2postfix(const char expr[])
 				{
 					p = stack;
 					stack = stack->next;
-					tail->next = p;
-					tail = p;
+					if (!list)
+					{
+						list = tail = p;
+					}
+					else
+					{
+						tail->next = p;
+						tail = p;
+					}
 					tail->next = NULL;
 				}
 				p = stack;
@@ -98,9 +105,16 @@ PTLIST infix2postfix(const char expr[])
 			{
 				while (stack->token.ator.isp >= p->token.ator.icp)
 				{
-					tail->next = stack;
+					if (!list)
+					{
+						list = tail = stack;
+					}
+					else
+					{
+						tail->next = stack;
+						tail = tail->next;
+					}
 					stack = stack->next;
-					tail = tail->next;
 					tail->next = NULL;
 				}
 				p->next = stack;
@@ -135,7 +149,7 @@ VARIANT eval(const char expr[])
 {
 	PTLIST p;
 	PTLIST op1, op2;
-	char* s1, * s2;
+	STRING s1, s2;
 	PTLIST stack = (PTLIST)calloc(1, sizeof(TOKEN_LIST));
 	stack->next = NULL;
 	stack->token.type = token_operator;
