@@ -6,6 +6,9 @@
 #include "grammar.h"
 #define _CRT_SECURE_NO_WARNINGS
 
+VARIANT memory[MEMORY_SIZE];
+CODE code[PROGRAM_SIZE];
+
 typedef enum
 {
     key_input = 0,  // INPUT
@@ -72,7 +75,7 @@ keywords yacc(const STRING line)
         return key_let;
     }
 
-    return -1;
+    return key_let;//要再加一个类型
 }
 
 void (*key_func[])(const STRING) = {
@@ -91,13 +94,13 @@ void (*key_func[])(const STRING) = {
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2)
+    /*if (argc != 2)
     {
         fprintf(stderr, "usage: %s basic_script_file\n", argv[0]);
         exit(EXIT_FAILURE);
-    }
-
-    load_program(argv[1]);
+    }*/
+	STRING name = "test.txt";
+    load_program(name);
 
     while (cp < code_size)
     {

@@ -683,13 +683,13 @@ VARIANT eval(const char expr[])
 			}
 			else
 			{
-				if (strcmp(op1->token.var.s, "true") ||
+				if (strcmp(op1->token.var.s, "true") &&
 					strcmp(op1->token.var.s, "false"))
 				{
 					fprintf(stderr, "类型错误!\n");
 					exit(EXIT_FAILURE);
 				}
-				if (strcmp(op2->token.var.s, "true") ||
+				if (strcmp(op2->token.var.s, "true") &&
 					strcmp(op2->token.var.s, "false"))
 				{
 					fprintf(stderr, "类型错误!\n");
@@ -848,23 +848,24 @@ static TOKEN next_token()
 			token.ator = operators[oper_rparen];
 			break;
 		case '+':
-			if (before.type == token_operand)
-			{
-				token.ator = operators[oper_plus];
-			}
-			else
+			if (before.ator.oper == oper_lparen)
 			{
 				token.ator = operators[oper_positive];
 			}
+			else
+			{
+				token.ator = operators[oper_plus];
+			}
 			break;
 		case '-':
-			if (before.type == token_operand)
+			if (before.ator.oper == oper_lparen)
 			{
-				token.ator = operators[oper_minus];
+				
+				token.ator = operators[oper_negative];
 			}
 			else
 			{
-				token.ator = operators[oper_negative];
+				token.ator = operators[oper_minus];
 			}
 			break;
 		case '*':

@@ -224,7 +224,8 @@ exec_endif,√
 void exec_if(const STRING line)
 {
 	STRING l;
-	char* s, * t,*k;
+	char* s, * t;
+	char k[10000]{};
 	int top = top_if + 1;
 
 	if (strnicmp(line, "IF ", 3))//后面有空格！ 相等=0
@@ -251,16 +252,17 @@ void exec_if(const STRING line)
 	{
 		goto errorhandler;
 	}
+	top_if++;
 	if (!strcmp(eval(k).s, "true"))//step肯定也要大于0 否则永远无法出循环
 	{
-		top_if++;
+		
 		stack_if[top_if] = 1;//标记一下这个if是执行的不执行后面的else
 		//不需要任何语句 因为返回后cp会++ 执行if语句的下一条
 	}
 	else
 	{
 		stack_if[top_if] = -1;//标记一下这个if是不执行的 需要执行else
-		while (cp < code_size && (strcmp(code[cp].line, "ENDIF")|| strcmp(code[cp].line, "ELSE")))//找到endif或者else 结束if语句 转去执行这两个
+		while (cp < code_size && (strcmp(code[cp].line, "ENDIF")&& strcmp(code[cp].line, "ELSE")))//找到endif或者else 结束if语句 转去执行这两个
 		{
 			cp++;
 		}
@@ -269,7 +271,7 @@ void exec_if(const STRING line)
 			goto errorhandler;
 		}
 	}
-
+	
 	return;
 
 errorhandler:
@@ -289,7 +291,7 @@ void exec_else(const STRING line)
 	}
 	if (stack_if[top_if] == 1)//if处已经执行 不需要执行else
 	{
-		while (cp < code_size && strcmp(code[cp].line, "ENDIF") )//找到endif或者else 结束if语句 转去执行这两个
+		while (cp < code_size && strcmp(code[cp].line, "END IF") )//找到endif或者else 结束if语句 转去执行这两个
 		{
 			cp++;
 		}
@@ -302,25 +304,27 @@ void exec_else(const STRING line)
 	{//执行此代码 不需要cp++ 返回后会++
 		return;
 	}
+	return;
 errorhandler:
 	fprintf(stderr, "Line %d: 语法错误！\n", code[cp].ln);
 	exit(EXIT_FAILURE);
 }
 void exec_endif(const STRING line)
 {
-	if (strnicmp(line, "ENDIF", 5))//后面有空格！ 相等=0
+	if (strnicmp(line, "END IF", 6))//后面有空格！ 相等=0
 	{
 		goto errorhandler;//如果不是合法的for 进入错误处理
 	}
 	else if (top_if <0)//判断层数
 	{
-		fprintf(stderr, "ENDIF 没有对应的IF/n");
+		fprintf(stderr, "END IF 没有对应的IF/n");
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
 		top_if--;//if语句结束
 	}
+	return;
 errorhandler:
 	fprintf(stderr, "Line %d: 语法错误！\n", code[cp].ln);
 	exit(EXIT_FAILURE);
@@ -348,10 +352,11 @@ void exec_while(const STRING line)//这是读入的指令
 	//while后面表达式不需要处理 交给eval处理
 
 
-	if (!strcmp(eval(s).s,"true"))//step肯定也要大于0 否则永远无法出循环
+	if ( strcmp(eval(s).s,"true"))//step肯定也要大于0 否则永远无法出循环
 	{
 		while (cp < code_size && strcmp(code[cp].line, "WEND"))//找到wend
 		{
+			top_while--;
 			cp++;
 		}
 		if (cp >= code_size)
@@ -361,7 +366,12 @@ void exec_while(const STRING line)//这是读入的指令
 	}
 	else
 	{
-		top_while++;
+		if (stack_while[top_while].isrun != 1)
+		{
+			top_while++;
+			stack_while[top_while].isrun = 1;
+			stack_while[top_while].ln = cp;//保存while的行号
+		}
 	}
 
 	return;
@@ -380,21 +390,14 @@ void exec_wend(const STRING line)
 	}
 	if (top_while < 0)
 	{
-		fprintf(stderr,"Line %d: NEXT 没有相匹配的 FOR！\n", code[cp].ln);
+		fprintf(stderr,"Line %d: WEND 没有相匹配的 WHILE！\n", code[cp].ln);
 		exit(EXIT_FAILURE);
 	}
 	//之后要判断里面
-	memory[stack_for[top_for].id].i += stack_for[top_for].step;
-	if (stack_for[top_for].step > 0 && memory[stack_for[top_for].id].i > stack_for[top_for].target)
-	{
-		top_for--;//退出当前循环
-	}
-	else if (stack_for[top_for].step < 0 && memory[stack_for[top_for].id].i < stack_for[top_for].target)
-	{
-		top_for--;//退出当前循环
-	}//考虑了+-两种情况
-	else
-	{
-		cp = stack_for[top_for].ln;
-	}
+	//返回至while处
+	cp = stack_while[top_while].ln-1;
+	return;
+errorhandler:
+	fprintf(stderr, "Line %d: 语法错误！\n", code[cp].ln);
+	exit(EXIT_FAILURE);
 }

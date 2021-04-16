@@ -7,6 +7,9 @@
 #include "expression.h"
 #define _CRT_SECURE_NO_WARNINGS
 
+int cp = 1;
+int code_size = 0;
+
 void load_program(STRING filename)
 {
     FILE* fp = fopen(filename, "r");
